@@ -1,0 +1,14 @@
+Mark:
+- Genetic Algorithms
+    - Fitness Function
+
+- Overall "Front-end" Creation / logistics approach
+
+
+Sagana:
+- Database
+    - Creation
+    - Collection of data
+    - Interpretation/Utilization of data
+    - Integration into genetic algorithm and fitness functions
+- Back-end / Data interpretation

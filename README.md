@@ -1,1 +1,1 @@
-# music-creation-ai-csci364
+# Music Creation CSCI364

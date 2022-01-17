@@ -23,3 +23,12 @@ Sagana's Notes:
         adding 2 from our C major triad. Just reference C major/minor scale, ask for user's input key, and do the proper
         arithmetic to create the scale for use
 - Added starting basic data so we can start using and testing the program. Everything is saved on in the heroku database
+
+
+Status update:
+    -> Stored common chords for classical music that can be referenced. Have separate tables in database to reference.
+       Can utilize the ones for creating a major or minor keys, types of chord progressions, the chromatic scale, and
+       keys to allow versatility in program structure.
+        -> We can use the information from this program to create melodies and then store them in the table for melodies developed for analysis.
+            -> Could allow us to have people to save their melodies from here, and we just give the list of what our preference/ scoring of the melody and
+                therefore allow them to choose the best melody idea from the user inputs

@@ -12,3 +12,23 @@ Sagana:
     - Interpretation/Utilization of data
     - Integration into genetic algorithm and fitness functions
 - Back-end / Data interpretation
+
+Sagana's Notes:
+- Using Heroku Postgres database to store music information for fitness function
+- In scale_type:
+    - Asked for the number of notes to incorporate pentatonic scale inclusion just in case we wanted to or to make
+      things easier for us with dealing with a small amount of notes
+      - Interval steps are in chromatic so C Major triad interval steps would be 1-5-8 in C major would be C-E-G.
+        Staying consistent so that when we know our starting key, we just add the values such as for D major 3-7-10 is
+        adding 2 from our C major triad. Just reference C major/minor scale, ask for user's input key, and do the proper
+        arithmetic to create the scale for use
+- Added starting basic data so we can start using and testing the program. Everything is saved on in the heroku database
+
+
+Status update:
+    -> Stored common chords for classical music that can be referenced. Have separate tables in database to reference.
+       Can utilize the ones for creating a major or minor keys, types of chord progressions, the chromatic scale, and
+       keys to allow versatility in program structure.
+        -> We can use the information from this program to create melodies and then store them in the table for melodies developed for analysis.
+            -> Could allow us to have people to save their melodies from here, and we just give the list of what our preference/ scoring of the melody and
+                therefore allow them to choose the best melody idea from the user inputs

@@ -1,8 +1,16 @@
+import os
+import psycopg2
 from collections import namedtuple
 from functools import partial
 from random import choices, randint, random, randrange
 from typing import List, Callable, Tuple
 
+# Database connection to Heroku
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
+# Creation of Selection Functions
 Genome = List[int]
 Population = List[Genome]
 FitnessFunc = Callable[[Genome], int]

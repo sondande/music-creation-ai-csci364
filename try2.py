@@ -20,11 +20,13 @@ def scale_to_scaleDegrees(root, qualityNumber):
     # ADD MINOR FUNCTIONALITY, AND FIGURE OUT AN EASIER WAY TO REFER TO THE ARRAYS FROM THE USER INPUT
     counter = NOTE_MAPPING[root]
     array = [NOTE_MAPPING[root]]
-    for i in range(7):
+    for i in range(6):
         counter += Major[i]
         array.append(counter % 12)
-
     print(array)
+
+    for i in range(6):
+        print(Major[array[i]])
 
 
 def main():

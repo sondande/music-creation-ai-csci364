@@ -4,8 +4,8 @@
 # FITNESS FUNCTION: RATING WILL BE DETERMINED BY THE USER
 
 NOTE_MAPPING = {"C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5, "F#": 6, "G": 7, "G#": 8, "A": 9, "A#": 10, "B": 11}
-majorIntervals = [2, 2, 1, 2, 2, 2, 1]
-minorIntervals = [2, 1, 2, 2, 1, 2, 2]
+Major = [2, 2, 1, 2, 2, 2, 1]
+Minor = [2, 1, 2, 2, 1, 2, 2]
 
 
 def scale_to_scaleDegrees(root, qualityNumber):
@@ -17,17 +17,24 @@ def scale_to_scaleDegrees(root, qualityNumber):
         quality = "Minor"
 
     print("The scale is " + root + " " + quality)
+    # ADD MINOR FUNCTIONALITY, AND FIGURE OUT AN EASIER WAY TO REFER TO THE ARRAYS FROM THE USER INPUT
+    counter = NOTE_MAPPING[root]
+    array = [NOTE_MAPPING[root]]
+    for i in range(7):
+        counter += Major[i]
+        array.append(counter % 12)
 
-    print("The AI Note Mapping is")
+    print(array)
 
 
 def main():
     root = input("What scale do you want?: ").capitalize()
-    if len(root) != 1:
+    if len(root) > 2:
         print("Not a valid root note, maybe too many characters.")
         exit()
     elif root not in NOTE_MAPPING.keys():
-        print("Not a valid root note, choose one of the following: 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'.")
+        print(
+            "Not a valid root note, choose one of the following: 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'.")
         exit()
 
     quality = input("Major or Minor? (Select 1 for major, 2 for minor): ")

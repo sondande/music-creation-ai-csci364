@@ -1,7 +1,8 @@
 # I HATE COMPUTER SCIENCE
 # CHROMOSOMES: the random four-note melodies
 # GENES: the notes within a given melodies
-# FITNESS FUNCTION: RATING WILL BE DETERMINED BY THE USER
+# FITNESS FUNCTION: Rating how well the melodies meets the constraints given by the user.
+#   -> Desiring a major key, root, type of scale used, and rating function
 
 NOTE_MAPPING = {"C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5, "F#": 6, "G": 7, "G#": 8, "A": 9, "A#": 10, "B": 11}
 Major = [2, 2, 1, 2, 2, 2, 1]

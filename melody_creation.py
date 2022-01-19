@@ -13,6 +13,16 @@ NOTE_MAPPING = {"C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5, "F#": 6, "G": 
 Major = [2, 2, 1, 2, 2, 2, 1]
 Minor = [2, 1, 2, 2, 1, 2, 2]
 
+
+class MelodyCreation:
+    # Initial constructor to create melody object to store information Creation of object so that the object may be
+    # used in other classes and utilized as one of the parents for another genetic algorithm
+
+    def __init__(self, scale_key='C', scale_type='Major'):
+        self.scale_key = scale_key
+        self.scale_type = scale_type
+
+
 """
     Connection to database and execution of fundamental code to query through information 
     
@@ -181,6 +191,7 @@ def minorScale(root, quality):
     Crossover_function: Selects a random index from array melody_a and flips the ending halves between
         melody_a and melody_b.
 """
+
 
 def crossover_function(melody_a, melody_b):
     if len(melody_a) != len(melody_b):

@@ -32,3 +32,13 @@ Status update:
         -> We can use the information from this program to create melodies and then store them in the table for melodies developed for analysis.
             -> Could allow us to have people to save their melodies from here, and we just give the list of what our preference/ scoring of the melody and
                 therefore allow them to choose the best melody idea from the user inputs
+
+
+Notes From try2.py:
+
+# ARE WE CHANGING THE DATABASE INFORMATION TO INDEX OFF ZERO? OR ARE WE CHANGING THE NOTE_MAPPING ABOVE TO INDEX OFF 1?
+# I PERSONALLY LIKE INDEXING OFF ZERO, BUT WE'LL DO WHAT MAKES THE MOST SENSE TO ENSURE THE MOST SEAMLESS CAPABILITY
+# BETWEEN PYTHON AND THE DATABASE.
+#
+# Just updated all the personal id's so that they are starting off of 0. Thank you for spotting that
+# Some global variables for convenience...

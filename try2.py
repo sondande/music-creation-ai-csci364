@@ -3,19 +3,68 @@
 # CS364
 # Final Artificial Intelligence Project
 #
-# I affirm that we have adhered to the Honor Code on this assignment - Mark Ligonde
+# I affirm that we have adhered to the Honor Code on this assignment - Mark Ligonde & Sagana Ondande
 
-
+import os
+import psycopg2
 from random import randint, random
 
 # ARE WE CHANGING THE DATABASE INFORMATION TO INDEX OFF ZERO? OR ARE WE CHANGING THE NOTE_MAPPING ABOVE TO INDEX OFF 1?
 # I PERSONALLY LIKE INDEXING OFF ZERO, BUT WE'LL DO WHAT MAKES THE MOST SENSE TO ENSURE THE MOST SEAMLESS CAPABILITY
 # BETWEEN PYTHON AND THE DATABASE.
 #
+# Just updated all the personal id's so that they are starting off of 0. Thank you for spotting that
 # Some global variables for convenience...
+
 NOTE_MAPPING = {"C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5, "F#": 6, "G": 7, "G#": 8, "A": 9, "A#": 10, "B": 11}
 Major = [2, 2, 1, 2, 2, 2, 1]
 Minor = [2, 1, 2, 2, 1, 2, 2]
+
+"""
+    Connection to database and execution of fundamental code to query through information 
+"""
+
+
+def connectToDatabase():
+    # Grabs environment variable set in application configurations
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    # Set connection variable
+    con = None
+    try:
+        # Establish connection to Database if exists/ has a stable connection
+        con = psycopg2.connect(DATABASE_URL)
+        #  create a new cursor
+        cur = con.cursor()
+
+        # execute an SQL statement to get the HerokuPostgres database version
+        print('PostgreSQL database version:')
+
+        # Execute SQL command
+        cur.execute("SELECT key_id, key FROM keys ORDER BY key_id")
+
+        # Fetch the first row if there is one, and print it out
+        db_version = cur.fetchone()
+        print("Fetching one row result:", db_version, "\n")
+
+        print("Fetching all rows section results:")
+        # Fetch all rows in database one by one
+        # This can also be achieved with cur.fetchall() command but this format can help with searching if we don't
+        # know the id of what we are looking for or the actual name of something in our database
+        while db_version is not None:
+            print(db_version)
+            db_version = cur.fetchone()
+
+        # close the communication with the HerokuPostgres
+        cur.close()
+    except Exception as error:
+        print('Cause: {}'.format(error))
+
+    # "Finally" section of try-catch statements are used to close objects and clean up resources
+    finally:
+        # close the communication with the database server by calling the close()
+        if con is not None:
+            con.close()
+            print('Database connection closed.')
 
 
 # scaleQualityAssignment: This function takes the two inputs from the main function (mainly the scale quality and
@@ -78,7 +127,8 @@ def crossover_function(melody_a, melody_b):
 
 # mutation_function: Selects two random indices from the array melody_a and flips the contents of their
 # positions. Potentially could call mutation_function multiple times to scramble up the entire chromosome.
-
+# TODO we can do that actually. We would want to use it as part of the termination function because we stop the
+# algorithm when we run out of options/ met the desired amount of iterations specified
 def mutation_function(melody_a):
     print(melody_a)
 
@@ -109,4 +159,5 @@ def main():
     scaleQualityAssignment(root, qualityNumber)
 
 
-main()
+connectToDatabase()
+# main()

@@ -8,8 +8,9 @@
 import os
 import psycopg2
 from random import randint, random
+from collections import OrderedDict
 
-NOTE_MAPPING = {"C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5, "F#": 6, "G": 7, "G#": 8, "A": 9, "A#": 10, "B": 11}
+# NOTE_MAPPING = {"C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5, "F#": 6, "G": 7, "G#": 8, "A": 9, "A#": 10, "B": 11}
 Major = [2, 2, 1, 2, 2, 2, 1]
 Minor = [2, 1, 2, 2, 1, 2, 2]
 
@@ -96,22 +97,24 @@ def execute_query_command(sql_command, table):
         # the code
         # Checks if the command is for chromatic scale table
         # Mainly to use just in case we are looking for a note value that could be in column note or e_harm_note
-        if table == "chromatic_scale":
-            # TODO check if the command is regarding columns note or e_harm_note
-            pass
-        else:
-            # Execute SQL command
-            cur.execute(sql_command)
+
+        # Execute SQL command
+        cur.execute(sql_command)
 
         # TODO Dependent on command can determine if we want to return all options or just the top one
         # Ex: Searching for an item we would only one to return one at a time compared to seeing possible options like
         # scales, keys, chord progressisions based off of genre input
         # Fetch the first row if there is one, and print it out
-        db_version = cur.fetchone()
-        print("Fetching one row result:", db_version, "\n")
 
-        print("Returning all from SQL command results:")
-        return
+        # TODO changed to return a list of items in array
+        # db_version = cur.fetchone()
+        db_result = cur.fetchall()
+        # print("Fetching one row result:", db_version, "\n")
+        #
+        # print("Returning all from SQL command results:")
+
+        # Returns a single array with the results from the query
+        return [i[0] for i in db_result]
 
         # close the communication with the HerokuPostgres
         cur.close()
@@ -145,6 +148,24 @@ def scaleQualityAssignment(root, qualityNumber):
         quality = "Minor"
         minorScale(root, quality)
 
+
+"""
+    Scale Method: Creates scale given based off scale information given
+"""
+
+
+def scaleCreation(root, scale):
+    # Find root in database
+    sql_c = "SELECT COUNT(note) FROM " + scale + " WHERE note=\'" + root + "\';"
+
+    print(sql_c)
+    sql_c2 = "{} {} {}".format("SELECT COUNT(e_harm_note) FROM", scale, " WHERE e_harm_note='C';")
+
+    # We check if either note is in our database. If the amount is greater than 0, it exists. If not, doesn't exist and need a different value
+    # TODO change to take in a scale and change sql to use that param
+    result = execute_query_command(sql_c, "c")[0] + execute_query_command(sql_c2, "c")[0]
+    print("result", result)
+    #if result == 0:
 
 """
     MajorScale: The function that helps declare the parameters for a major scale
@@ -219,26 +240,37 @@ def mutation_function(melody_a):
 
 # Main function: The place we start our program, and interact with the user based on their needs and specifications.
 def main():
-    root = input("What scale do you want?: ").capitalize()
+    # TODO change back when wanting a different input
+    root = 'C'# input("What root note for your scale do you want?: ").capitalize()
+    # Creates a list of all possible roots by combining the columns note and e_harm_note from our chromatic scale database. We also use the fromKeys method to take away all duplicates
+    NOTE_MAPPING = list(OrderedDict.fromkeys(execute_query_command("SELECT note FROM chromatic_scale;", "chromatic_scale") + execute_query_command("SELECT e_harm_note FROM chromatic_scale;", "chromatic_scale")))
+    # Sort the list for easier search later
+    NOTE_MAPPING.sort()
     if len(root) > 2:
         print("Not a valid root note, maybe too many characters.")
         exit()
-    elif root not in NOTE_MAPPING.keys():
+    elif root not in NOTE_MAPPING:
         print(
-            "Not a valid root note, choose one of the following: 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', "
-            "'A', 'A#', 'B'.")
+            "Not a valid root note, choose one of the following: ", NOTE_MAPPING)
         exit()
 
-    qualityNumber = input("Major or Minor? (Select 1 for major, 2 for minor): ")
-    if len(qualityNumber) != 1:
-        print("Not a valid scale quality, maybe too many characters.")
-        exit()
-    if int(qualityNumber) < 1 or int(qualityNumber) > 2:
-        print("Not a valid scale quality, look over the options again.")
-        exit()
+    # Create Key scale for use in melody use
+    scaleCreation(root, "chromatic_scale")
 
-    scaleQualityAssignment(root, qualityNumber)
+    # TODO will take in argument from command line in first finished project and then web api for later use
+    qualityNumber = int(input("Major or Minor? (Select 1 for major, 2 for minor): "))
+
+    # if qualityNumber == 1:
+    #     scale = "Maj"
+    # else:
+    #     "Min"
+    scale_input = "Minor" if qualityNumber == 2 else "Major"
+    scaleCreation(root, scale_input)
 
 
-connectToDatabase()
-# main()
+#connectToDatabase()
+# a = execute_query_command("Select scale_degree from chromatic_scale WHERE note ='C' or e_harm_note = 'C' ;", "chord_progressions")
+# b = execute_query_command("Select scale_degree from chromatic_scale WHERE note ='C' or e_harm_note = 'C' ;", "chord_progressions")
+# print("a", a[0])
+
+main()

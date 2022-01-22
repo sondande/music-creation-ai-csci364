@@ -1,13 +1,15 @@
+""" PERSONAL CHECK. MAIN IS GETTING IMPORTED AGAIN SO MAIN IS GETTING RUN TWICE. NEED TO FIX """
+
 """
     Driver Class for Application
 """
 import sys
 import os
 import psycopg2
+from melodyNotes import Population
 from scaleCreation import chromatic_scale_creation
 from d_connection import execute_query_command
 from encode_decoder import decodeNotes
-import melodyNotes
 from random import randint, random
 from collections import OrderedDict
 
@@ -47,18 +49,20 @@ elif root not in CHROMATIC_NOTE_MAPPING:
 
 # Chromatic Scale Creation and reference variable
 KEY_SCALE = chromatic_scale_creation(root, scale_type)
+population = Population(root, KEY_SCALE, scale_type, CHROMATIC_NOTE_MAPPING)
+population.initial_population(0, 16,4)
 
-def main():
-
-    decoded_scale = decodeNotes(KEY_SCALE)
-    print(decoded_scale)
-
-    ## Create initial population ###
-
-    # Be used as unique index??? For storing the population of each generation and then we can see the difference between different generations
-    generation = 0
-    melodyNotes.initial_population(generation, 16,4)
-
-
-if __name__ == "__main__":
-    main()
+# def main():
+#
+#     decoded_scale = decodeNotes(KEY_SCALE)
+#     print(decoded_scale)
+#
+#     ## Create initial population ###
+#
+#     # Be used as unique index??? For storing the population of each generation and then we can see the difference between different generations
+#     generation = 0
+#     melodyNotes.initial_population(generation, 16,4)
+#
+#
+# # if __name__ == "__main__":
+# #     main()

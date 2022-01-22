@@ -284,8 +284,4 @@ def main():
 #
 #
 # #connectToDatabase()
-# # a = execute_query_command("Select scale_degree from chromatic_scale WHERE note ='C' or e_harm_note = 'C' ;", "chord_progressions")
-# # b = execute_query_command("Select scale_degree from chromatic_scale WHERE note ='C' or e_harm_note = 'C' ;", "chord_progressions")
-# # print("a", a[0])
-
 main()

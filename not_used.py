@@ -155,3 +155,62 @@ def genome_to_things(genome: Genome, things: [Thing]) -> [Thing]:
 
 print(f"number of generations: {generations}")
 print(f"best solution: {genome_to_things(population[0], things)}")
+
+
+# additions from prior code
+
+"""
+    MajorScale: The function that helps declare the parameters for a major scale
+"""
+
+
+def majorScale(root, quality):
+    counter = NOTE_MAPPING[root]
+    array = [NOTE_MAPPING[root]]
+    for i in range(6):
+        counter += Major[i]
+        array.append(counter % 12)
+    print("The scale degrees are: ")
+    print(array)
+    print("The scale is " + root + " " + quality + ". The notes are:")
+    for i in range(7):
+        key_list = list(NOTE_MAPPING.keys())
+        val_list = list(NOTE_MAPPING.values())
+        print(key_list[val_list.index(array[i])], end=" ")
+
+
+"""
+    MinorScale: The function that helps declare the parameters for a major scale
+"""
+
+
+def minorScale(root, quality):
+    counter = NOTE_MAPPING[root]
+    array = [NOTE_MAPPING[root]]
+    for i in range(6):
+        counter += Minor[i]
+        array.append(counter % 12)
+    print("The scale degrees are: ")
+    print(array)
+    print("The scale is " + root + " " + quality + ". The notes are:")
+    for i in range(7):
+        key_list = list(NOTE_MAPPING.keys())
+        val_list = list(NOTE_MAPPING.values())
+        print(key_list[val_list.index(array[i])], end=" ")
+
+
+    """
+        scaleQualityAssignment: This function takes the two inputs from the main function (mainly the scale quality and
+        designates which function to send it to for interpretation.
+    """
+
+
+    def scaleQualityAssignment(root, qualityNumber):
+        quality = ''
+        if int(qualityNumber) == 1:
+            quality = "Major"
+            majorScale(root, quality)
+
+        elif int(qualityNumber) == 2:
+            quality = "Minor"
+            minorScale(root, quality)

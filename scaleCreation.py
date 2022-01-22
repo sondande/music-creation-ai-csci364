@@ -10,7 +10,7 @@ import psycopg2
 from random import randint, random
 from collections import OrderedDict
 
-# NOTE_MAPPING = {"C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5, "F#": 6, "G": 7, "G#": 8, "A": 9, "A#": 10, "B": 11}
+# CHROMATIC_NOTE_MAPPING = {"C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5, "F#": 6, "G": 7, "G#": 8, "A": 9, "A#": 10, "B": 11}
 Major = [2, 2, 1, 2, 2, 2, 1]
 Minor = [2, 1, 2, 2, 1, 2, 2]
 
@@ -142,35 +142,3 @@ def chromatic_scale_creation(root, scale):
         scale_degree_scale.append(last_spot)
     print(scale_degree_scale)
     return scale_degree_scale
-
-### GENETIC ALGORITHM ####
-
-# Newest additions!
-"""
-    Crossover_function: Selects a random index from array melody_a and flips the ending halves between
-        melody_a and melody_b.
-"""
-
-
-def crossover_function(melody_a, melody_b):
-    if len(melody_a) != len(melody_b):
-        print("The two melodies chosen must be of same length")
-        exit()
-    c_point = randint(1, len(melody_a) - 1)
-    return melody_a[0:c_point] + melody_b[c_point:], melody_b[0:c_point] + melody_a[c_point:]
-
-
-"""
-    Mutation_function: Selects two random indices from the array melody_a and flips the contents of their
-        positions. Potentially could call mutation_function multiple times to scramble up the entire chromosome
-"""
-
-
-# TODO we can do that actually. We would want to use it as part of the termination function because we stop the
-#   algorithm when we run out of options/ met the desired amount of iterations specified
-def mutation_function(melody_a):
-    print(melody_a)
-
-    startPoint, endPoint = [randint(1, len(melody_a) // 2), randint(len(melody_a) // 2 + 1, len(melody_a) - 1)]
-    melody_a[startPoint], melody_a[endPoint] = melody_a[endPoint], melody_a[startPoint]
-    return melody_a

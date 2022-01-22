@@ -150,22 +150,41 @@ def scaleQualityAssignment(root, qualityNumber):
 
 
 """
+    Create the chromatic scale for use to create scales
+"""
+
+
+def chromatic_scale_degree(root):
+    # Find root scale degree in database
+    sql_c = "SELECT scale_degree FROM chromatic_scale WHERE note=\'" + root + "\' or e_harm_note=\'" + root + "\';"
+    root_scale_degree = execute_query_command(sql_c, "c")[0]
+    return root_scale_degree
+
+
+"""
     Scale Method: Creates scale given based off scale information given
 """
 
 
 def scaleCreation(root, scale):
-    # Find root in database
-    sql_c = "SELECT COUNT(note) FROM " + scale + " WHERE note=\'" + root + "\';"
+    # Find root scale degree in database
+    root_scale_degree = int(chromatic_scale_degree(root))
+    print("root scale degree result", root_scale_degree)
+    sql_c = "SELECT interval_transition FROM scale_type WHERE scale_type_full_name=\'" + scale + "\';"
+    scale_transition_result = execute_query_command(sql_c, "c")[0]
+    print(scale_transition_result)
+    scale_transition_result = [int(s) for s in scale_transition_result.split(", ") if s.isdigit()]
+    # Takes root scale degree and adds transitions to it to get the next scale degree of that scale and add to an array
+    scale_degree_scale = [root_scale_degree]
+    last_spot = root_scale_degree
+    for degree in scale_transition_result:
+        last_spot = last_spot + degree
+        if last_spot > 12:
+                last_spot -= 12
+        scale_degree_scale.append(last_spot)
+    print(scale_degree_scale)
+    return scale_degree_scale
 
-    print(sql_c)
-    sql_c2 = "{} {} {}".format("SELECT COUNT(e_harm_note) FROM", scale, " WHERE e_harm_note='C';")
-
-    # We check if either note is in our database. If the amount is greater than 0, it exists. If not, doesn't exist and need a different value
-    # TODO change to take in a scale and change sql to use that param
-    result = execute_query_command(sql_c, "c")[0] + execute_query_command(sql_c2, "c")[0]
-    print("result", result)
-    #if result == 0:
 
 """
     MajorScale: The function that helps declare the parameters for a major scale
@@ -241,9 +260,11 @@ def mutation_function(melody_a):
 # Main function: The place we start our program, and interact with the user based on their needs and specifications.
 def main():
     # TODO change back when wanting a different input
-    root = 'C'# input("What root note for your scale do you want?: ").capitalize()
+    root = 'C'  # input("What root note for your scale do you want?: ").capitalize()
     # Creates a list of all possible roots by combining the columns note and e_harm_note from our chromatic scale database. We also use the fromKeys method to take away all duplicates
-    NOTE_MAPPING = list(OrderedDict.fromkeys(execute_query_command("SELECT note FROM chromatic_scale;", "chromatic_scale") + execute_query_command("SELECT e_harm_note FROM chromatic_scale;", "chromatic_scale")))
+    NOTE_MAPPING = list(OrderedDict.fromkeys(
+        execute_query_command("SELECT note FROM chromatic_scale;", "chromatic_scale") + execute_query_command(
+            "SELECT e_harm_note FROM chromatic_scale;", "chromatic_scale")))
     # Sort the list for easier search later
     NOTE_MAPPING.sort()
     if len(root) > 2:
@@ -254,23 +275,17 @@ def main():
             "Not a valid root note, choose one of the following: ", NOTE_MAPPING)
         exit()
 
-    # Create Key scale for use in melody use
-    scaleCreation(root, "chromatic_scale")
-
-    # TODO will take in argument from command line in first finished project and then web api for later use
+    #     # TODO will take in argument from command line in first finished project and then web api for later use
     qualityNumber = int(input("Major or Minor? (Select 1 for major, 2 for minor): "))
-
-    # if qualityNumber == 1:
-    #     scale = "Maj"
-    # else:
-    #     "Min"
     scale_input = "Minor" if qualityNumber == 2 else "Major"
     scaleCreation(root, scale_input)
 
 
-#connectToDatabase()
-# a = execute_query_command("Select scale_degree from chromatic_scale WHERE note ='C' or e_harm_note = 'C' ;", "chord_progressions")
-# b = execute_query_command("Select scale_degree from chromatic_scale WHERE note ='C' or e_harm_note = 'C' ;", "chord_progressions")
-# print("a", a[0])
+#
+#
+# #connectToDatabase()
+# # a = execute_query_command("Select scale_degree from chromatic_scale WHERE note ='C' or e_harm_note = 'C' ;", "chord_progressions")
+# # b = execute_query_command("Select scale_degree from chromatic_scale WHERE note ='C' or e_harm_note = 'C' ;", "chord_progressions")
+# # print("a", a[0])
 
 main()

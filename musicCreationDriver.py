@@ -37,11 +37,9 @@ chord_progression_id = str(sys.argv[3])
 # Get's chord progressions bass line melody in array and storing the notes as their chromatic values
 chord_progression = execute_query_command("SELECT chord_progression_melody FROM chord_progressions WHERE chord_progression_id=" + chord_progression_id + ";")
 chord_progression = chord_progression[0]
-print("chord_progression", chord_progression)
 # Get's chord progressions with qualities
 chord_progressions_quality = execute_query_command("SELECT chord_progression FROM chord_progressions WHERE chord_progression_id=" + chord_progression_id + ";")
 # Creates list of the quality of scales in desired chord progression
-print("chord_progressions_quality", chord_progressions_quality)
 scale_quality = []
 
 for chord_p in chord_progressions_quality:
@@ -56,12 +54,10 @@ for chord_p in chord_progressions_quality:
 
 chord_progression_scales_list = []
 counter = 0
-print("scale_quality[0]", scale_quality[0])
 # creates all the notes in the scale for the specific chord in chord progression
 for degree in chord_progression:
     chord_progression_scales_list.append(chromatic_scale_creation(degree+1, scale_quality[0][counter]))
 
-print("chord_progression_scales_list", chord_progression_scales_list)
 ### Initial creation of Population for melody through the creation of scales from the inputs given ###
 
 # Creates a list of all possible roots by combining the columns note and e_harm_note from our chromatic scale
@@ -95,7 +91,6 @@ for i in range(1,3):
     new_pop = population.selection()
     # Stores and sets new pop as our current
     population.new_gen_pop_dev(generation, new_pop)
-    print("iteration", i)
     generation += i
 
 # Finished creating our options: return desired amount of options

@@ -20,7 +20,6 @@ from d_connection import execute_query_command, insert_population_list, insert_m
 
 
 def mutation_function(melody_a):
-    print(melody_a)
 
     startPoint, endPoint = [randint(1, len(melody_a) // 2), randint(len(melody_a) // 2 + 1, len(melody_a) - 1)]
     melody_a[startPoint], melody_a[endPoint] = melody_a[endPoint], melody_a[startPoint]
@@ -29,7 +28,6 @@ def mutation_function(melody_a):
 
 def crossover_function(melody_a, melody_b):
     if len(melody_a) != len(melody_b):
-        print("The two melodies chosen must be of same length")
         exit()
     c_point = randint(1, len(melody_a) - 1)
     return melody_a[0:c_point] + melody_b[c_point:], melody_b[0:c_point] + melody_a[c_point:]
@@ -188,7 +186,6 @@ class Population:
             SQL_set = "SET fitness_score = %s" % str(fitness_score)
 
             if isinstance(melody, list) and isinstance(melody[0], int):
-                print("firstloop")
                 SQL_where = "WHERE melody = array%s;" % str(melody)
 
             update_table("melodies", SQL_set, SQL_where)
@@ -224,7 +221,6 @@ class Population:
         avg_current_fit = self.current_generation_fitness_score / len(self.current_population)
         # Calculate average fitness per chromosome of prior generation
         print("select population_size from population WHERE generation = \'%s\';" % str(self.current_generation - 1))
-        print(self.current_generation)
         # Set as constant due to errors
         prior_gen_size = self.user_population_size
         prior_gen_fit = 1
@@ -249,6 +245,5 @@ class Population:
                 n.append(new_pop[s])
         self.user_population_size = len(self.current_population)
         self.current_population = n
-        print("complete")
 
         return n

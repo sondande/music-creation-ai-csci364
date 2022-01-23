@@ -18,6 +18,8 @@ Run Configs:
 
 Database connection credentials: 
 
+Heroku git url: https://git.heroku.com/music-creation.git
+
 user: pubtdytykcmsge
 
 database: daakjag812mcl1

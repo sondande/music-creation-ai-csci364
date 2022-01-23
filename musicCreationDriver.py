@@ -99,7 +99,7 @@ for i in range(1,3):
     generation += i
 
 # Finished creating our options: return desired amount of options
-sql_comm = "select melody from melodies order by fitness_score asc fetch first 10 rows only WHERE generation=%s" % str(population.current_generation)
-
+sql_comm = "select melody from melodies order by fitness_score; "
+result = execute_query_command(sql_comm)
 # Prints results from query
-print(sql_comm)
+print(result)

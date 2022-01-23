@@ -29,9 +29,9 @@ def chromatic_scale_degree(root):
 """
 
 
-def chromatic_scale_creation(root, scale):
+def chromatic_scale_creation(root_degree, scale):
     # Find root scale degree in database
-    root_scale_degree = int(chromatic_scale_degree(root))
+    root_scale_degree = int(root_degree)
     sql_c = "SELECT interval_transition FROM scale_type WHERE scale_type_full_name=\'" + scale + "\';"
     scale_transition_result = execute_query_command(sql_c)[0]
     scale_transition_result = [int(s) for s in scale_transition_result.split(", ") if s.isdigit()]

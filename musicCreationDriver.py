@@ -7,8 +7,8 @@ import sys
 import os
 import psycopg2
 from melodyNotes import Population
-from scaleCreation import chromatic_scale_creation
-from d_connection import execute_query_command
+from scaleCreation import chromatic_scale_creation, chromatic_scale_degree
+from d_connection import execute_query_command, scale_degree_search
 from encode_decoder import decodeNotes
 from random import randint, random
 from collections import OrderedDict
@@ -25,9 +25,42 @@ from collections import OrderedDict
 # Takes in inputs from user and evaluates
 root = str(sys.argv[1]).capitalize()
 
+root_scale= chromatic_scale_degree(root)
+
 # TODO Implement Check if scale type is in our database
 scale_type = str(sys.argv[2]).capitalize()
 
+chord_progression_id = str(sys.argv[3])
+# Grab user chord progression
+
+# Get's chord progressions bass line melody in array and storing the notes as their chromatic values
+chord_progression = execute_query_command("SELECT chord_progression_melody FROM chord_progressions WHERE chord_progression_id=" + chord_progression_id + ";")
+chord_progression = chord_progression[0]
+print("chord_progression", chord_progression)
+# Get's chord progressions with qualities
+chord_progressions_quality = execute_query_command("SELECT chord_progression FROM chord_progressions WHERE chord_progression_id=" + chord_progression_id + ";")
+# Creates list of the quality of scales in desired chord progression
+print("chord_progressions_quality", chord_progressions_quality)
+scale_quality = []
+
+for chord_p in chord_progressions_quality:
+    progression = []
+    for s in chord_p.split("-"):
+        if s.isdigit():
+            quality = "Major"
+        else:
+            quality = "Minor"
+        progression.append(quality)
+    scale_quality.append(progression)
+
+chord_progression_scales_list = []
+counter = 0
+print("scale_quality[0]", scale_quality[0])
+# creates all the notes in the scale for the specific chord in chord progression
+for degree in chord_progression:
+    chord_progression_scales_list.append(chromatic_scale_creation(degree+1, scale_quality[0][counter]))
+
+print(chord_progression_scales_list)
 ### Initial creation of Population for melody through the creation of scales from the inputs given ###
 
 # Creates a list of all possible roots by combining the columns note and e_harm_note from our chromatic scale
@@ -48,10 +81,11 @@ elif root not in CHROMATIC_NOTE_MAPPING:
     exit()
 
 # Chromatic Scale Creation and reference variable
-KEY_SCALE = chromatic_scale_creation(root, scale_type)
-population = Population(root, KEY_SCALE, scale_type, CHROMATIC_NOTE_MAPPING)
-population.initial_population(0, 16,4)
-
+KEY_SCALE = chromatic_scale_creation(root_scale, scale_type)
+#bass_chord_progressions = execute_query_command("SELECT chord_progression_melody FROM chord_progressions;")
+population = Population(root, KEY_SCALE, scale_type, CHROMATIC_NOTE_MAPPING, chord_progression, chord_progression_scales_list)
+population.initial_population(1, 16,4)
+population.fitness_function()
 # def main():
 #
 #     decoded_scale = decodeNotes(KEY_SCALE)

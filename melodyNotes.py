@@ -3,7 +3,7 @@
     Constraints: The Scale and Key inputs given by user
 """
 from random import randint
-from d_connection import execute_query_command, insert_population_list
+from d_connection import execute_query_command, insert_population_list, insert_melodies
 
 """
     Population Model: 
@@ -26,13 +26,16 @@ class Population:
     """
 
     # Global variables for Reference of Key, Scale Type, and Chromatic Scale Generated in Main.py
-    def __init__(self, root, KEY_SCALE, scale_type, CHROMATIC_NOTE_MAPPING):
+    def __init__(self, root, KEY_SCALE, scale_type, CHROMATIC_NOTE_MAPPING, chord_progression, chord_progression_scales_list):
         self.current_root = root
         self.current_scale = KEY_SCALE
         self.scale_type = scale_type
+        self.chord_progression = chord_progression
         self.chromatic_scale = CHROMATIC_NOTE_MAPPING
         self.current_population = None
         self.current_generation = None
+        # self.bass_cp = bass_c_list
+        self.chord_progression_scales_list = chord_progression_scales_list
 
     """
         Creates the initial population for our genetic algorithm using Heuristic initialization for some of the populationm,
@@ -47,9 +50,9 @@ class Population:
         initial_population = []
 
         ### Go through database to get notes for heauristic created initial_population
-        basic_chord_progressions = execute_query_command("SELECT chord_progression FROM chord_progressions;")
+        basic_chord_progressions = execute_query_command("SELECT chord_progression_melody FROM chord_progressions;")
         for chord_p in basic_chord_progressions:
-            initial_population.append([int(s) if s.isdigit() else int(s[1]) for s in chord_p.split("-")])
+            initial_population.append(chord_p)
 
         # Ensure each initial chromosome is of length 4. If not, insert '0' at index 0 or after last index as that maintains
         # a common ideology of "standard" classical music theory
@@ -70,14 +73,39 @@ class Population:
                 # Add to Chromosome random scale degree from our current scale through choosing a random index
                 random_chrom.append(self.current_scale[randint(0,len(self.current_scale)-1)])
             initial_population.append(random_chrom)
-        print(initial_population[0])
-        # Add Initial Population to Database
-        insert_population_list(str(generation), str(initial_population))
+
+        # Add Initial Population to Database table population
+        insert_population_list(str(initial_population))
+
+        # Insert Each Melody from initial_population into melodies table in database
+        for melody in initial_population:
+            insert_melodies(generation, melody)
         self.current_population = initial_population
         self.current_generation = generation
 
+    """
+        Uses the fitness function to be used on constraint of chord progression desired by user
+    """
+
 
     def fitness_function(self):
+        # Get all chord progression base melodies to compare for fitness
+        #print(self.bass_cp)
+        # Select every melody
+        for melody in self.current_population:
+            fitness_score = 0
+            # Rate melody on:
+            # Checks if it is only the baseline of our chord progression 
+            if melody == self.chord_progression:
+                fitness_score-=1
+            for note in melody:
+                # in key contraint by user
+                if note in self.current_scale:
+                    fitness_score += 1
+
+
+
+
         return
 
 

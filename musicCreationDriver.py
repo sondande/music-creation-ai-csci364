@@ -102,5 +102,8 @@ for r in result:
     print("Melody Option from inputs as chromatic pitches:", r)
     # Convert to Notes by changing index starting point
     for i in range(len(r)):
-        r[i] += 1
+        if r[i] == 12:
+            r[i] = 1
+        else:
+            r[i] += 1
     print("Melody Option from inputs as note values:", decodeNotes(r) , "\n")

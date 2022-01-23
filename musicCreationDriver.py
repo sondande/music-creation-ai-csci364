@@ -29,7 +29,6 @@ root = str(sys.argv[1]).capitalize()
 
 root_scale= chromatic_scale_degree(root)
 
-# TODO Implement Check if scale type is in our database
 scale_type = str(sys.argv[2]).capitalize()
 
 chord_progression_id = str(sys.argv[3])
@@ -100,4 +99,8 @@ result = execute_query_command(sql_comm)
 # Prints results from query
 print("MELODY OPTIONS GENERATED! HERE ARE YOUR OPTIONS")
 for r in result:
-    print("Melody Option from inputs:", decodeNotes(list(r)))
+    print("Melody Option from inputs as chromatic pitches:", r)
+    # Convert to Notes by changing index starting point
+    for i in range(len(r)):
+        r[i] += 1
+    print("Melody Option from inputs as note values:", decodeNotes(r) , "\n")

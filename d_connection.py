@@ -99,7 +99,7 @@ def insert_population_list(generation, population_size, population_list):
     """ insert multiple vendors into the vendors table  """
     # Grabs environment variable set in application configurations
     DATABASE_URL = os.environ.get('DATABASE_URL')
-    sql = "INSERT INTO population(generation, population_size, population_list) VALUES(%s,%s,%s) ON CONFLICT(generation) DO NOTHING;"
+    sql = "INSERT INTO population(generation, population_size, population_list) VALUES(%s,%s,%s);"
     con = None
     try:
         # Establish connection to Database if exists/ has a stable connection
@@ -162,7 +162,7 @@ def insert_melodies(generation, melody):
 
 def update_table(table,set_statement,where_statement):
     """ update vendor name based on the vendor id """
-    sql = "UPDATE %s %s %s;" % (str(table),str(set_statement),str(where_statement))
+    sql = "UPDATE %s %s %s" % (str(table),str(set_statement),str(where_statement))
     print(sql)
     # Grabs environment variable set in application configurations
     DATABASE_URL = os.environ.get('DATABASE_URL')

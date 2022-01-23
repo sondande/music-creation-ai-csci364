@@ -85,16 +85,18 @@ elif root not in CHROMATIC_NOTE_MAPPING:
 KEY_SCALE = chromatic_scale_creation(root_scale, scale_type)
 #bass_chord_progressions = execute_query_command("SELECT chord_progression_melody FROM chord_progressions;")
 population = Population(root, KEY_SCALE, scale_type, CHROMATIC_NOTE_MAPPING, chord_progression, chord_progression_scales_list)
-population.initial_population(1, 16,5)
-
+population.initial_population(16,5)
+generation = 0
 # doing it for chosen iterations
-for i in range(25):
+for i in range(1,3):
     # calculates current population's fitness
-    population.fitness_function()
+    population.fitness_function(generation)
     # Creates new population
     new_pop = population.selection()
     # Stores and sets new pop as our current
-    population.new_gen_pop_dev(new_pop)
+    population.new_gen_pop_dev(generation, new_pop)
+    print("iteration", i)
+    generation += i
 
 # Finished creating our options: return desired amount of options
 sql_comm = "select melody from melodies order by fitness_score asc fetch first 10 rows only WHERE generation=%s" % str(population.current_generation)

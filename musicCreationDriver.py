@@ -21,6 +21,7 @@ from collections import OrderedDict
 
 """ Functions that need to run before main and set variables that are universal for project """
 
+
 ## Global Variables for Entire Application
 # Takes in inputs from user and evaluates
 root = str(sys.argv[1]).capitalize()
@@ -84,19 +85,19 @@ elif root not in CHROMATIC_NOTE_MAPPING:
 KEY_SCALE = chromatic_scale_creation(root_scale, scale_type)
 #bass_chord_progressions = execute_query_command("SELECT chord_progression_melody FROM chord_progressions;")
 population = Population(root, KEY_SCALE, scale_type, CHROMATIC_NOTE_MAPPING, chord_progression, chord_progression_scales_list)
-population.initial_population(1, 16,4)
-population.fitness_function()
-# def main():
-#
-#     decoded_scale = decodeNotes(KEY_SCALE)
-#     print(decoded_scale)
-#
-#     ## Create initial population ###
-#
-#     # Be used as unique index??? For storing the population of each generation and then we can see the difference between different generations
-#     generation = 0
-#     melodyNotes.initial_population(generation, 16,4)
-#
-#
-# # if __name__ == "__main__":
-# #     main()
+population.initial_population(1, 16,5)
+
+# doing it for chosen iterations
+for i in range(25):
+    # calculates current population's fitness
+    population.fitness_function()
+    # Creates new population
+    new_pop = population.selection()
+    # Stores and sets new pop as our current
+    population.new_gen_pop_dev(new_pop)
+
+# Finished creating our options: return desired amount of options
+sql_comm = "select melody from melodies order by fitness_score asc fetch first 10 rows only WHERE generation=%s" % str(population.current_generation)
+
+# Prints results from query
+print(sql_comm)

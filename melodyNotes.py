@@ -33,9 +33,11 @@ class Population:
         self.chord_progression = chord_progression
         self.chromatic_scale = CHROMATIC_NOTE_MAPPING
         self.current_population = None
+        self.prior_population_size = None
         self.current_generation = None
         self.current_generation_fitness_score = 0
         self.chord_progression_scales_list = chord_progression_scales_list
+        self.user_population_size = None
 
     """
         Creates the initial population for our genetic algorithm using Heuristic initialization for some of the populationm,
@@ -48,6 +50,8 @@ class Population:
 
         ## Create initial_population array
         initial_population = []
+
+        self.user_population_size = population_size
 
         ### Go through database to get notes for heauristic created initial_population
         basic_chord_progressions = execute_query_command("SELECT chord_progression_melody FROM chord_progressions;")
@@ -75,13 +79,27 @@ class Population:
             initial_population.append(random_chrom)
 
         # Add Initial Population to Database table population
-        insert_population_list(str(initial_population))
+        insert_population_list(str(generation), str(len(initial_population)), str(initial_population))
 
         # Insert Each Melody from initial_population into melodies table in database
         for melody in initial_population:
             insert_melodies(generation, melody)
         self.current_population = initial_population
         self.current_generation = generation
+
+    """
+    
+    """
+
+    def new_gen_pop_dev(self, new_pop):
+        # Add Initial Population to Database table population
+        insert_population_list(str(self.current_generation), str(new_pop))
+
+        # Insert Each Melody from initial_population into melodies table in database
+        for melody in new_pop:
+            insert_melodies(str(self.current_generation), melody)
+        self.current_population = new_pop
+        self.current_generation = self.current_generation + 1
 
     """
         Uses the fitness function to be used on constraint of chord progression desired by user
@@ -155,16 +173,42 @@ class Population:
             update_table("melodies", SQL_set, SQL_where)
             # Add to cumulative score in class variable
             self.current_generation_fitness_score += fitness_score
-            # Updates population table with cummulative fitness for population
-            SQL_set = "SET population_fitness = %s" % str(self.current_generation_fitness_score)
+        # Updates population table with cummulative fitness for population
+        SQL_set = "SET population_fitness = %s" % str(self.current_generation_fitness_score)
 
-            SQL_where = "WHERE generation = %s;" % str(self.current_generation)
-            update_table("population", SQL_set, SQL_where)
-        return
+        SQL_where = "WHERE generation = %s;" % str(self.current_generation)
+        update_table("population", SQL_set, SQL_where)
+        return True
 
 
-    def parent_selection(self):
-        return
+    """
+        Selection of Genetic Algorithm that chooses the best chromosome to put in our next generation population 
+    """
+    def selection(self):
+        # Calculate average fitness per chromosome of current generation
+        avg_current_fit = self.current_generation_fitness_score / len(self.current_population)
+        # Calculate average fitness per chromosome of prior generation
+        print("select population_size from population WHERE generation = \'%s\';" % str(self.current_generation - 1))
+        if self.current_generation > 1:
+            prior_gen_size = execute_query_command("select population_size from population WHERE generation = \'%s\';" % str(self.current_generation - 1))
+            prior_gen_fit = execute_query_command("select population_fitness from population WHERE generation =\'%s\';;" % str(self.current_generation - 1))
+        else:
+            prior_gen_size = self.user_population_size
+            prior_gen_fit = 1
+        avg_last_gen_fit = prior_gen_fit/prior_gen_size
+        # Compare the averages
+        new_pop=[]
+        if abs(avg_current_fit - avg_last_gen_fit) > 0:
+            current_gen_melody = execute_query_command(
+                "select melody from melodies WHERE generation = %s and fitness_score > %s;" % (str(self.current_generation), str(abs(avg_current_fit - avg_last_gen_fit))))[0]
+            new_pop.append(current_gen_melody)
+            if self.current_generation > 1:
+                prior_gen_melody = execute_query_command("select melody from melodies WHERE generation = %s and fitness_score > %s;" % (str(self.current_generation-1), str(abs(avg_current_fit - avg_last_gen_fit))))[0]
+            if self.current_generation == 1 or self.current_generation % 5 == 0:
+                new_mut = mutation_function(current_gen_melody[randint(0, len(current_gen_melody) - 1)])
+                current_gen_melody[randint(0, len(current_gen_melody) - 1)] = new_mut
+            new_pop.append(prior_gen_melody)
+        return population
 
 
     ### GENETIC ALGORITHM ####

@@ -95,11 +95,11 @@ def execute_query_command(sql_command):
 """
 
 
-def insert_population_list(population_list):
+def insert_population_list(generation, population_size, population_list):
     """ insert multiple vendors into the vendors table  """
     # Grabs environment variable set in application configurations
     DATABASE_URL = os.environ.get('DATABASE_URL')
-    sql = "INSERT INTO population(population_list) VALUES(%s)"
+    sql = "INSERT INTO population(generation, population_size, population_list) VALUES(%s,%s,%s) ON CONFLICT(generation) DO NOTHING;"
     con = None
     try:
         # Establish connection to Database if exists/ has a stable connection
@@ -109,7 +109,7 @@ def insert_population_list(population_list):
         cur = con.cursor()
 
         # execute the INSERT statement
-        cur.execute(sql, (population_list,))
+        cur.execute(sql, (generation, population_size, population_list))
         # commit the changes to the database
         con.commit()
         # close communication with the database

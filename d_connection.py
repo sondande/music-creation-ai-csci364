@@ -131,7 +131,8 @@ def insert_melodies(generation, melody):
     """ insert multiple vendors into the vendors table  """
     # Grabs environment variable set in application configurations
     DATABASE_URL = os.environ.get('DATABASE_URL')
-    sql = "INSERT INTO melodies(generation, melody) VALUES(%s,%s)"
+    # inserts into database table only unique items using ON CONFLICT(melody) DO NOTHING where if there is a duplicate melody, don't do anything/don't add
+    sql = "INSERT INTO melodies(generation, melody) VALUES(%s,%s) ON CONFLICT(melody) DO NOTHING"
     con = None
     try:
         # Establish connection to Database if exists/ has a stable connection
@@ -154,4 +155,38 @@ def insert_melodies(generation, melody):
         if con is not None:
             con.close()
     return True
+
+"""
+    Update table with Fitness scores
+"""
+
+def update_table(table,set_statement,where_statement):
+    """ update vendor name based on the vendor id """
+    sql = "UPDATE %s %s %s;" % (str(table),str(set_statement),str(where_statement))
+    print(sql)
+    # Grabs environment variable set in application configurations
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    con = None
+    updated_rows = 0
+    try:
+        # Establish connection to Database if exists/ has a stable connection
+        con = psycopg2.connect(DATABASE_URL)
+
+        # create a new cursor
+        cur = con.cursor()
+        # execute the UPDATE  statement
+        cur.execute(sql)
+        # get the number of updated rows
+        updated_rows = cur.rowcount
+        # Commit the changes to the database
+        con.commit()
+        # Close communication with the PostgreSQL database
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if con is not None:
+            con.close()
+
+    return updated_rows
 

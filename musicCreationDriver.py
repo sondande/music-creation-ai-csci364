@@ -60,7 +60,7 @@ print("scale_quality[0]", scale_quality[0])
 for degree in chord_progression:
     chord_progression_scales_list.append(chromatic_scale_creation(degree+1, scale_quality[0][counter]))
 
-print(chord_progression_scales_list)
+print("chord_progression_scales_list", chord_progression_scales_list)
 ### Initial creation of Population for melody through the creation of scales from the inputs given ###
 
 # Creates a list of all possible roots by combining the columns note and e_harm_note from our chromatic scale

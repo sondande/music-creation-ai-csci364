@@ -6,11 +6,12 @@ import os
 import psycopg2
 
 """
+    Only SELECT SQL command
     Used to imported command to interact with database and return desired information
 """
 
 
-def execute_query_command(sql_command, values = None):
+def execute_query_command(sql_command):
     # Grabs environment variable set in application configurations
     DATABASE_URL = os.environ.get('DATABASE_URL')
     # Set connection variable

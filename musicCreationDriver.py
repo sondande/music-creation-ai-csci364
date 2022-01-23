@@ -97,4 +97,6 @@ for i in range(1,3):
 sql_comm = "select melody from melodies order by fitness_score; "
 result = execute_query_command(sql_comm)
 # Prints results from query
-print(result)
+
+for r in result:
+    print("Melody Choices:", r)

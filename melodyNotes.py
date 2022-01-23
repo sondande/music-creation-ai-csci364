@@ -220,7 +220,6 @@ class Population:
         # Calculate average fitness per chromosome of current generation
         avg_current_fit = self.current_generation_fitness_score / len(self.current_population)
         # Calculate average fitness per chromosome of prior generation
-        print("select population_size from population WHERE generation = \'%s\';" % str(self.current_generation - 1))
         # Set as constant due to errors
         prior_gen_size = self.user_population_size
         prior_gen_fit = 1

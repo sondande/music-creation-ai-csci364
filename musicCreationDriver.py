@@ -24,6 +24,7 @@ from collections import OrderedDict
 
 ## Global Variables for Entire Application
 # Takes in inputs from user and evaluates
+print("Welcome! Generating melodies from inputs now.....")
 root = str(sys.argv[1]).capitalize()
 
 root_scale= chromatic_scale_degree(root)
@@ -97,6 +98,6 @@ for i in range(1,3):
 sql_comm = "select melody from melodies order by fitness_score; "
 result = execute_query_command(sql_comm)
 # Prints results from query
-
+print("MELODY OPTIONS GENERATED! HERE ARE YOUR OPTIONS")
 for r in result:
-    print("Melody Choices:", r)
+    print("Melody Option from inputs:", decodeNotes(list(r)))

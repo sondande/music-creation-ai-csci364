@@ -14,26 +14,9 @@ a learning heuristic to help the computer take in considerations from other genr
 to stray away from the “defined characteristic” of a specific genre), length of melody, technical
 difficulty, and desired chord progression to use as a base reference.
 
-Run Configs:
-
-Database connection credentials: 
-
-Heroku git url: https://git.heroku.com/music-creation.git
-
-user: pubtdytykcmsge
-
-database: daakjag812mcl1
-
-url: jdbc:postgresql://ec2-34-206-245-175.compute-1.amazonaws.com:5432/daakjag812mcl1 
-
-host: ec2-34-206-245-175.compute-1.amazonaws.com 
-
-port: 5432
-
-Environment variables:  
-DATABASE_URL= postgres://pubtdytykcmsge:9211085462720cee0882b37af5d0b593091a1e568199c26eb5e5aed3b48310f3@ec2-34-206-245-175.compute-1.amazonaws.com:5432/daakjag812mcl1
-
-
 Output:
 
 Returns outputs of array with scale chromatic values that can be used as a reference in Ableton 
+
+Current Next Steps: 
+- Prepare program for production use 

@@ -1,6 +1,6 @@
 # Music Creation CSCI364
 
-Summary:
+## Summary:
 
 When creating music, we have all searched for the best ideas and the best tools
 to aid us in our compositions. We tend to loop up the best music production software, tutorials
@@ -14,7 +14,7 @@ a learning heuristic to help the computer take in considerations from other genr
 to stray away from the “defined characteristic” of a specific genre), length of melody, technical
 difficulty, and desired chord progression to use as a base reference.
 
-Output:
+## Output:
 
 Returns outputs of array with scale chromatic values that can be used as a reference in Ableton 
 
